@@ -1,4 +1,3 @@
-
 from psychopy import prefs
 prefs.hardware['audioLib'] = ['PTB', 'pyo', 'pygame']
 from psychopy import visual, core, event, sound, gui
@@ -52,6 +51,7 @@ def trial(win: visual.Window, distributions: list, currentAmount: int, ms: event
                 winWindow(win, f"You won {value}")
             clicked = True
             return (value, rt, name)
+        core.wait(0.01)
     return (0, 0, "")
 
 def checkIfEscape():
@@ -254,7 +254,17 @@ def derivedInfo(results, trialInfo):
     numTrials, arm, winning = trialInfo
     
     if numTrials > 1:
-        _,_,_, trial, prevArm, _, _, current, _, switch, switchRate, armA, armB, armAcount, armBcount, armAval, armBval, rt = results[-1]
+        # FID 0, blockType 1, block 2, trial (1 indexed) 3, name 4, greedyChoice 5, winning 6, current 7, prevArm 8, switch 9, switchRate 10, armAProb 11, armBProb 12, armAcount 13, armBcount 14, armAval 15, armBval 16, rt 17
+        last = results[-1]
+        trial = last[3]
+        prevArm = last[4]
+        current = last[7]
+        switchRate = last[10]
+        armAcount = last[13]
+        armBcount = last[14]
+        armAval = last[15]
+        armBval = last[16]
+
         greedyChoice = 'A' if (armAval > armBval) else 'B' if (armAval < armBval) else 'arb'
 
         current += winning
@@ -268,7 +278,14 @@ def derivedInfo(results, trialInfo):
         switch = 1 if (prevArm != arm) else 0
         switchRate += (1/(trial))*(switch - switchRate)
     else:
-        greedyChoice, armAcount, armBcount, armAval, armBval, prevArm, switch, switchRate = ('arb', 0, 0, 0, 0, None, None, 0)
+        greedyChoice = 'arb'
+        armAcount = 0
+        armBcount = 0
+        armAval = 0
+        armBval = 0
+        prevArm = None 
+        switch = None 
+        switchRate = 0
         current = winning
         if arm == 'A':
             armAcount += 1
@@ -276,7 +293,6 @@ def derivedInfo(results, trialInfo):
         elif arm == 'B':
             armBcount += 1
             armBval = winning
-
 
     return greedyChoice, armAcount, armBcount, armAval, armBval, prevArm, switch, switchRate, current
 
@@ -290,14 +306,14 @@ def trialBlock(win: visual.Window, distributions: list, ms: event.Mouse, n_trial
 
     #Actual trials
     current = 0
-    bandit1, _ = distributions[0]
-    bandit2, _ = distributions[1]
+    armAprob = max(distributions[0][0], distributions[1][0])
+    armBprob = min(distributions[0][0], distributions[1][0])
 
     results = []
     for i in range(n_trials):
         winning, rt, name = trial(win, distributions, current, ms)
         greedyChoice, armAcount, armBcount, armAval, armBval, prevArm, switch, switchRate, current = derivedInfo(results, (i+1, name, winning))
-        results.append((FID, blockType, block, i+1, name, greedyChoice, winning, current, prevArm, switch, switchRate, max(bandit1, bandit2), min(bandit1, bandit2), armAcount, armBcount, armAval, armBval, rt))
+        results.append((FID, blockType, block, i+1, name, greedyChoice, winning, current, prevArm, switch, switchRate, armAprob, armBprob, armAcount, armBcount, armAval, armBval, rt))
 
     blockEval(current, highscore)
 
