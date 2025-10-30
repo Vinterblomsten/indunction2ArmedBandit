@@ -439,7 +439,7 @@ n_practiceTrials = 5
 Det er dem herunder der skal ændres ift. test og det rigtige eksperiment!!!!!
 '''
 skipableMusic = True
-trials_per_block = 2
+trials_per_block = 50
 
 
 instructionText(win)
