@@ -21,7 +21,7 @@ def trial(win: visual.Window, distributions: list, currentAmount: int, ms: event
         stims.append(stim)
         stim.draw()
     drawlabels = floating_key_labels(win, stims[0], stims[1], base_offset=40, label_height=36)
-    maxwin = 0.75*5*10
+    maxwin = 0.75*50*10
     acumBox, acumFill = scoreAccumulator(win, currentAmount, maxwin)
     acumBox.draw()
     acumFill.draw()
@@ -172,6 +172,12 @@ def slider(win: visual.Window, prompt: str, labels: tuple) -> float:
         if any(k in getkeys for k in ['return','enter']) and slider.getRating() is not None:
             value = slider.getRating()
     return value
+
+def musicalBreak():
+    breakText = visual.TextStim(win, text="Have a 10 second break for your ears and mind.", pos=(0, 0), color='white', height=50)
+    breakText.draw()
+    win.flip()
+    core.wait(10)
 
 def inductionTrial(file, skipable):
     introText = visual.TextStim(win, text=f"Listen to the music and report the likability afterwards", pos=(0, 0), color='white', height=60)
@@ -353,6 +359,8 @@ def inductionBlocks(n_blocks: int, blockType: tuple, savePath: str, blockDistrib
         blockResult['InductionMusicScore'] = inductionTest
         blockResult['BlockOrder'] = latinorder
         blockResult.to_csv(resultPath, index=False, mode='a', header=not os.path.exists(resultPath))
+
+    musicalBreak()
     
     return newhighscore, postMoodScore
 
