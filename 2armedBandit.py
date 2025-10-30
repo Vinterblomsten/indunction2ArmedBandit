@@ -346,6 +346,12 @@ def trialBlock(win: visual.Window, distributions: list, ms: event.Mouse, n_trial
 
     return (pd.DataFrame(results, columns=['FID', 'Blocktype','Block', 'Trial', 'Arm', 'GreedyChoice', 'Reward', 'Acummulated', 'PrevArm','Switch', 'SwitchRate', 'Arm-A', 'Arm-B', 'Arm-ACount', 'Arm-BCount', 'Arm-AVal', 'Arm-BVal', 'RT']), max(current, highscore))
 
+def musicalBreak():
+    breakText = visual.TextStim(win, text="Have a 10 second break for your ears and mind.", pos=(0, 0), color='white', height=50)
+    breakText.draw()
+    win.flip()
+    core.wait(10)
+
 def inductionBlocks(n_blocks: int, blockType: tuple, savePath: str, blockDistributions: list, trials_per_block: int, FID: int, latinorder: int, preMoodScore, highscore: int = 0, skipable: bool = False):
     #Concrete induction of musical vibe
     btype, inductionMusic, backgroundMusic = blockType
@@ -380,6 +386,8 @@ def inductionBlocks(n_blocks: int, blockType: tuple, savePath: str, blockDistrib
         blockResult['BlockOrder'] = latinorder
         blockResult.to_csv(resultPath, index=False, mode='a', header=not os.path.exists(resultPath))
     
+    musicalBreak()
+
     return newhighscore, postMoodScore
 
 def practiceBlock(savePath: str, blockDistributions: list, trials_per_block: int, FID: int):
