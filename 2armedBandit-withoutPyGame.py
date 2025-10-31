@@ -12,6 +12,13 @@ def getSubjectInfo():
         core.quit()
     return info['FID'], info['BlockOrder']
 
+def getSubjectCharacteristics():
+    info = {'Age': 0, 'Gender (F/M/Other)': ' '}
+    dlg = gui.DlgFromDict(dictionary=info, title='n-Armed Bandit Experiment')
+    if not dlg.OK:
+        core.quit()
+    return info['Age'], info['Gender (F/M/Other)']
+
 def trial(win: visual.Window, distributions: list, currentAmount: int, ms: event.Mouse):
     bandits = nbandits(win, distributions)
     aggregate = visual.TextStim(win, text=f"Current Amount: {currentAmount}", pos=(0, -300), color='white', height=60)
@@ -398,6 +405,7 @@ def getInductionList(blockOrder: int):
 
 #Iitializing stuff
 id, blockOrder = getSubjectInfo()
+age, gender = getSubjectCharacteristics()
 
 win = visual.Window(size=(800, 600), color='blue', units='pix', fullscr=True)
 clock = core.Clock()
@@ -430,6 +438,12 @@ os.makedirs(f'data/{id}', exist_ok=True)
 
 if os.path.exists(f'data/{id}/results.csv'):
     os.remove(f'data/{id}/results.csv')
+
+if os.path.exists(f'data/{id}/characteristics.csv'):
+    os.remove(f'data/{id}/characteristics.csv')
+
+characteristicsPath = f'data/{id}/characteristics.csv'
+pd.DataFrame([(id, age, gender)], columns=['FID', 'Age', 'Gender']).to_csv(characteristicsPath, index=False, mode='a', header=not os.path.exists(characteristicsPath))
 
 
 permhighscore = 0
