@@ -233,6 +233,7 @@ def instructionText(win: visual.Window):
     "This will trigger a message, saying whether you won or not.\n" 
     "Your job is to maximize your points throughout the trials. \n" \
     "Use the information from previous trials to guide your choices!\n" \
+    "Some cards will be more rewarding than others over time.\n" \
     "Press any key to start the experiment, good luck!")
     instrText = visual.TextStim(win, text=text2, pos=(0, 0), color='white', height=30, wrapWidth=1000)
     instrText.draw()
