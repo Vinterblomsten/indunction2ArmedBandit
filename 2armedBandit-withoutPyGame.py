@@ -187,7 +187,9 @@ def musicalBreak():
     core.wait(10)
 
 def inductionTrial(file, skipable):
-    introText = visual.TextStim(win, text=f"Listen to the music and report the likability afterwards", pos=(0, 0), color='white', height=60)
+    introString = "Listen to the music and report the likability afterwards. \n" \
+    "The music takes approx. 3 minutes."
+    introText = visual.TextStim(win, text=introString, pos=(0, 0), color='white', height=60)
     introText.draw()
     win.flip()
     core.wait(2)
@@ -209,7 +211,9 @@ def moodTest(win: visual.Window):
     return answer
 
 def controlTrial(file, skipable):
-    introText = visual.TextStim(win, text=f"Listen to the music and report the likability afterwards", pos=(0, 0), color='white', height=60)
+    introString = "Listen to the music and report the likability afterwards. \n" \
+    "The music takes approx. 3 minutes."
+    introText = visual.TextStim(win, text=introString, pos=(0, 0), color='white', height=60)
     introText.draw()
     win.flip()
     core.wait(2)
@@ -443,7 +447,7 @@ if os.path.exists(f'data/{id}/characteristics.csv'):
     os.remove(f'data/{id}/characteristics.csv')
 
 characteristicsPath = f'data/{id}/characteristics.csv'
-pd.DataFrame([(id, age, gender)], columns=['FID', 'Age', 'Gender']).to_csv(characteristicsPath, index=False, mode='a', header=not os.path.exists(characteristicsPath))
+pd.DataFrame([(id, age, gender, blockOrder)], columns=['FID', 'Age', 'Gender', 'BlockOrder']).to_csv(characteristicsPath, index=False, mode='a', header=not os.path.exists(characteristicsPath))
 
 
 permhighscore = 0
@@ -453,7 +457,7 @@ n_practiceTrials = 5
 '''
 Det er dem herunder der skal ændres ift. test og det rigtige eksperiment!!!!!
 '''
-skipableMusic = True
+skipableMusic = False
 trials_per_block = 50
 
 
