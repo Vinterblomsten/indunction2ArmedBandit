@@ -164,9 +164,10 @@ def slider(win: visual.Window, prompt: str, labels: tuple) -> float:
         color='LightGray',
         labelHeight=40,
         markerColor='DarkGray',
-        lineColor='White'
+        lineColor='White',
+        font='DejaVu Sans'
     )
-    promptText = visual.TextStim(win, text=prompt, pos=(0, 150), color='white', height=50)
+    promptText = visual.TextStim(win, text=prompt, pos=(0, 200), color='white', height=50)
     value = None
 
     while value is None:
